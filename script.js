@@ -1036,12 +1036,13 @@ async function refreshAll() {
   try {
     await ensureChartJs();
     const ds = await api.datasets();
-    const k = computeKPIs(ds, getFilters());
+    const f = getFilters();
+    const k = computeKPIs(ds, f);
 
     updateKPITexts(k);
     
     // Render all charts (remove tab-specific rendering for simplicity)
-    renderExecutiveCharts(k, getFilters());
+    renderExecutiveCharts(k, f);
     renderQualityCharts(k);
     renderSupplyCharts(k);
     renderRegCharts(k);
