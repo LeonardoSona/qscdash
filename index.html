@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain & Quality Control Tower</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">Control Tower</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('executive')">Executive Dashboard</button>
+                <button class="nav-tab" onclick="switchTab('quality')">Quality Management</button>
+                <button class="nav-tab" onclick="switchTab('supply')">Supply Chain Ops</button>
+                <button class="nav-tab" onclick="switchTab('regulatory')">Regulatory</button>
+                <button class="nav-tab" onclick="switchTab('analytics')">Analytics</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <select class="filter-select" id="siteFilter">
+                <option value="all">All Sites</option>
+                <option value="site1">Site 1</option>
+                <option value="site2">Site 2</option>
+                <option value="site3">Site 3</option>
+            </select>
+            <select class="filter-select" id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="cat1">Category A</option>
+                <option value="cat2">Category B</option>
+                <option value="cat3">Category C</option>
+            </select>
+            <select class="filter-select" id="dateFilter">
+                <option value="30d">Last 30 Days</option>
+                <option value="90d">Last 90 Days</option>
+                <option value="1y">Last Year</option>
+            </select>
+        </div>
+
+        <!-- Executive Dashboard -->
+        <div id="executive" class="tab-content active">
+            <h2 class="section-title">Executive Dashboard</h2>
+            
+            <div class="alert-bar" style="display: none;" id="alertBar">
+                <strong>Alert:</strong> <span id="alertText"></span>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Order Fulfillment Rate</div>
+                        <div class="kpi-status" id="fulfillmentStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="fulfillmentRate">97.8%</div>
+                    <div class="kpi-change positive" id="fulfillmentChange">↗ +0.3%</div>
+                    <div class="gauge">
+                        <div class="gauge-bg">
+                            <div class="gauge-fill" style="--fill-angle: 176deg;"></div>
+                        </div>
+                        <div class="gauge-text">Target: 98%</div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">OTIF %</div>
+                        <div class="kpi-status" id="otifStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="otifRate">94.2%</div>
+                    <div class="kpi-change negative" id="otifChange">↘ -1.2%</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Perfect Order Rate</div>
+                        <div class="kpi-status amber" id="perfectOrderStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="perfectOrderRate">89.5%</div>
+                    <div class="kpi-change negative" id="perfectOrderChange">↘ -2.1%</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Supplier Performance Score</div>
+                        <div class="kpi-status" id="supplierStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="supplierScore">91.3</div>
+                    <div class="kpi-change positive" id="supplierChange">↗ +1.8</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Release Time (QA)</div>
+                        <div class="kpi-status" id="qaTimeStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="qaTime">4.2 days</div>
+                    <div class="kpi-change positive" id="qaTimeChange">↗ -0.3 days</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Inventory Turnover</div>
+                        <div class="kpi-status amber" id="inventoryTurnoverStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="inventoryTurnover">5.2x</div>
+                    <div class="kpi-change positive" id="inventoryTurnoverChange">↗ +0.4x</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Blocked Stock %</div>
+                        <div class="kpi-status" id="blockedStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="blockedStock">1.8%</div>
+                    <div class="kpi-change positive" id="blockedChange">↗ -0.2%</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Backorder Rate</div>
+                        <div class="kpi-status" id="backorderStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="backorderRate">2.4%</div>
+                    <div class="kpi-change negative" id="backorderChange">↗ +0.5%</div>
+                    <div class="mini-chart"></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Regional Performance Overview</h3>
+                <div class="chart-placeholder" id="regional-performance-placeholder">Interactive Regional Performance Chart</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Portfolio Trend by Category</h3>
+                <div class="chart-placeholder" id="portfolio-trend-placeholder">100% Stacked Area Chart</div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Total Supply Chain Cost</div>
+                    <div class="metric-value">$2.4M</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Cash-to-Cash Cycle</div>
+                    <div class="metric-value">42 days</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Supply Chain Visibility</div>
+                    <div class="metric-value">87%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Inventory Accuracy</div>
+                    <div class="metric-value">96.8%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quality Management -->
+        <div id="quality" class="tab-content">
+            <h2 class="section-title">Quality Management</h2>
+            
+            <div class="dashboard-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Batch Release Rate</div>
+                        <div class="kpi-status" id="batchReleaseStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="batchReleaseRate">96.4%</div>
+                    <div class="kpi-change positive">↗ +1.2%</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg QA Processing Days</div>
+                        <div class="kpi-status" id="qaProcessingStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="qaProcessingDays">4.8 days</div>
+                    <div class="kpi-change positive">↗ -0.2 days</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Critical Deviations</div>
+                        <div class="kpi-status red" id="criticalDeviationStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="criticalDeviations">7</div>
+                    <div class="kpi-change negative">↗ +2</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Lab TAT</div>
+                        <div class="kpi-status" id="labTATStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="labTAT">3.8 days</div>
+                    <div class="kpi-change positive">↗ -0.5 days</div>
+                    <div class="mini-chart"></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Batch Release by Site</h3>
+                <div class="chart-placeholder">Stacked Bar Chart - Pass vs Fail by Site</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Deviation Root Causes</h3>
+                <div class="chart-placeholder">Pareto Chart - Top 10 Root Causes</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Lab TAT Trend</h3>
+                <div class="chart-placeholder">Line Chart with SLA Threshold Line</div>
+            </div>
+        </div>
+
+        <!-- Supply Chain Operations -->
+        <div id="supply" class="tab-content">
+            <h2 class="section-title">Supply Chain Operations</h2>
+            
+            <div class="dashboard-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Order Cycle Time</div>
+                        <div class="kpi-status" id="orderCycleStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="orderCycleTime">12.3 days</div>
+                    <div class="kpi-change negative">↘ +0.8 days</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Lead Time</div>
+                        <div class="kpi-status amber" id="leadTimeStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="leadTime">18.5 days</div>
+                    <div class="kpi-change positive">↗ -1.2 days</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Inventory Aging</div>
+                        <div class="kpi-status" id="inventoryAgingStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="inventoryAging">45 days</div>
+                    <div class="kpi-change positive">↗ -3 days</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Cost per Order</div>
+                        <div class="kpi-status amber" id="costPerOrderStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="costPerOrder">$1,245</div>
+                    <div class="kpi-change negative">↘ +$78</div>
+                    <div class="mini-chart"></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">OTIF Performance by Brand</h3>
+                <div class="chart-placeholder">Horizontal Bar Chart with Target Line</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Stock Status Distribution</h3>
+                <div class="chart-placeholder">Donut Chart with Trend Sparkline</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Inventory Aging Distribution</h3>
+                <div class="chart-placeholder">Stacked Bar Chart by Aging Buckets</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Blocked Stock by Site</h3>
+                <div class="chart-placeholder">Heatmap by Site (Blocked %)</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Delay Reasons</h3>
+                <div class="chart-placeholder">Pareto or Treemap Chart</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Lead Time Distribution</h3>
+                <div class="chart-placeholder">Histogram with Percentile Markers</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Supplier Scorecard</h3>
+                <div class="chart-placeholder">Multi-dimensional Scorecard Grid (OTD, Quality, SLA)</div>
+            </div>
+        </div>
+
+        <!-- Regulatory & Compliance -->
+        <div id="regulatory" class="tab-content">
+            <h2 class="section-title">Regulatory & Compliance</h2>
+            
+            <div class="dashboard-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Approval Rate</div>
+                        <div class="kpi-status" id="approvalRateStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="approvalRate">92.1%</div>
+                    <div class="kpi-change positive">↗ +2.3%</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Pending Submissions</div>
+                        <div class="kpi-status amber" id="pendingSubmissionStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="pendingSubmissions">23</div>
+                    <div class="kpi-change negative">↗ +5</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Avg Time to Approval (TTA)</div>
+                        <div class="kpi-status" id="timeToApprovalStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="timeToApproval">28 days</div>
+                    <div class="kpi-change positive">↗ -2 days</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Coverage %</div>
+                        <div class="kpi-status" id="coverageStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="coveragePercent">94.5%</div>
+                    <div class="kpi-change positive">↗ +1.2%</div>
+                    <div class="mini-chart"></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Approval Coverage Heatmap</h3>
+                <div class="chart-placeholder">Country vs Brand Approval Heatmap</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Submission Backlog & TTA</h3>
+                <div class="chart-placeholder">Combo Chart (Backlog Bars + TTA Line)</div>
+            </div>
+        </div>
+
+        <!-- Cross-Domain Analytics -->
+        <div id="analytics" class="tab-content">
+            <h2 class="section-title">Cross-Domain Analytics</h2>
+            
+            <div class="dashboard-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">QA Delays vs OTIF Impact</div>
+                        <div class="kpi-status amber" id="qaOtifStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="qaOtifCorrelation">-0.73</div>
+                    <div class="kpi-change">Correlation</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Deviation Impact on Delivery</div>
+                        <div class="kpi-status red" id="deviationStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="deviationImpact">-0.68</div>
+                    <div class="kpi-change">Correlation</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Cost vs Quality Trade-offs</div>
+                        <div class="kpi-status" id="costQualityStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="costQualityCorrelation">0.42</div>
+                    <div class="kpi-change">Correlation</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Supplier Perf vs Order Success</div>
+                        <div class="kpi-status" id="supplierOrderStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="supplierOrderCorrelation">0.65</div>
+                    <div class="kpi-change">Correlation</div>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-title">Blocked Stock Impact</div>
+                        <div class="kpi-status amber" id="blockedStockImpactStatus"></div>
+                    </div>
+                    <div class="kpi-value" id="blockedStockImpact">1.8%</div>
+                    <div class="kpi-change positive">↗ -0.2%</div>
+                    <div class="mini-chart"></div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Lead Time vs Cycle Time Analysis</h3>
+                <div class="chart-placeholder">Scatter Plot with Regression Line</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Supplier Performance vs Order Success</h3>
+                <div class="chart-placeholder">Bubble Chart - Performance Impact Analysis</div>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">Inventory Aging Distribution (Analytics)</h3>
+                <div class="chart-placeholder">Distribution Analysis with Statistical Markers</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
