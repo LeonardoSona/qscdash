@@ -733,9 +733,9 @@ function renderSupplyCharts(k) {
   }
 
   // Supplier Scorecard (grouped horizontal bars)
-  const cont8 = document.querySelector('#supply .chart-container:nth-of-type(7) .chart-placeholder');
-  if (cont7) {
-    const canvas = makeCanvas(cont7, 'chart_supplier_scorecard');
+  const cont8 = document.querySelector('#supply .chart-container:nth-of-type(8) .chart-placeholder');
+  if (cont8) {
+    const canvas = makeCanvas(cont8, 'chart_supplier_scorecard');
     if (canvas && k.filtered.sp.length > 0) {
       // Aggregate by supplier (average last N months in current filter)
       const bySup = groupBy(k.filtered.sp, 'supplier_id');
@@ -779,8 +779,8 @@ function renderSupplyCharts(k) {
         }
       };
       renderChart('chart_supplier_scorecard', cfg);
-    } else if (cont7) {
-      cont7.innerHTML = '<div style="padding:2rem;text-align:center;color:#64748b;">No supplier data available</div>';
+    } else {
+      cont8.innerHTML = '<div style="padding:2rem;text-align:center;color:#64748b;">No supplier data available</div>';
     }
   }
 
