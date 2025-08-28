@@ -969,70 +969,10 @@ function renderAnalyticsCharts(k) {
   }
 }
 
-function renderRegulatoryCharts(k, f) {
-  console.log('=== Rendering Regulatory Charts ===');
-
-  // Submission Backlog & TTA (dual-axis: bar = Pending backlog, line = Avg TTA)
-  const cont2 = document.querySelector('#regulatory .chart-container:nth-of-type(2) .chart-placeholder');
-  if (cont2) {
-    const canvas = makeCanvas(cont2, 'chart_submission_backlog_tta');
-    if (canvas && k.filtered.s.length > 0) {
-      // Months (respect current range)
-      const months = [...new Set(k.filtered.s.map(r=>r.month))].sort();
-
-      const pendingByMonth = months.map(m => k.filtered.s.filter(r=>r.month===m && r.status==='Pending').length);
-      const ttaByMonth = months.map(m => {
-        const arr = k.filtered.s.filter(r=>r.month===m && r.status==='Approved');
-        return arr.length ? arr.reduce((a,x)=>a+(x.tta||0),0)/arr.length : 0;
-      });
-
-      const cfg = {
-        type: 'bar',
-        data: {
-          labels: months,
-          datasets: [
-            {
-              label: 'Pending backlog',
-              data: pendingByMonth,
-              backgroundColor: '#dc2626',
-              borderColor: '#dc2626',
-              yAxisID: 'y'
-            },
-            {
-              type: 'line',
-              label: 'Avg TTA (days)',
-              data: ttaByMonth,
-              borderColor: '#30EA03',
-              backgroundColor: 'rgba(48,234,3,0.15)',
-              fill: true,
-              tension: 0.3,
-              yAxisID: 'y1'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: { title: { display: true, text: 'Submission Backlog & Time-to-Approval (TTA)' } },
-          scales: {
-            y:  { position: 'left',  title: { display: true, text: 'Pending submissions (#)' }, beginAtZero: true },
-            y1: { position: 'right', title: { display: true, text: 'Avg TTA (days)' }, beginAtZero: true, grid: { drawOnChartArea: false } }
-          }
-        }
-      };
-      renderChart('chart_submission_backlog_tta', cfg);
-    } else if (cont2) {
-      cont2.innerHTML = '<div style="padding:2rem;text-align:center;color:#64748b;">No submission data available</div>';
-    }
-  }
-}
-
-
 /* --------------------------------- Main Logic -------------------------------- */
 async function refreshAll() {
   console.log('=== Refreshing Dashboard ===');
-  
+
   try {
     await ensureChartJs();
     const ds = await api.datasets();
@@ -1040,15 +980,14 @@ async function refreshAll() {
     const k = computeKPIs(ds, f);
 
     updateKPITexts(k);
-    
+
     // Render all charts (remove tab-specific rendering for simplicity)
-    renderExecutiveCharts(k, f);
+    renderExecutiveCharts(k, getFilters());
     renderQualityCharts(k);
     renderSupplyCharts(k);
     renderRegCharts(k);
-    renderRegulatoryCharts(k, f);
     renderAnalyticsCharts(k);
-    
+
     console.log('Dashboard refresh complete');
   } catch (error) {
     console.error('Error refreshing dashboard:', error);
